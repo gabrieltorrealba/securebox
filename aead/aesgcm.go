@@ -13,9 +13,10 @@ type aesgcm struct{}
 func NewAESGCM() AEAD { return &aesgcm{} }
 
 // AES-256 GCM uses a 32-byte (256-bit) key
-func (a *aesgcm) KeySize() int   { return 32 } 
+func (a *aesgcm) KeySize() int { return 32 }
+
 // AES GCM standard nonce size is 12 bytes (96 bits)
-func (a *aesgcm) NonceSize() int { return 12 } 
+func (a *aesgcm) NonceSize() int { return 12 }
 
 // Seal encrypts and authenticates plaintext with the given key, nonce, and additional associated data (aad).
 // It returns the resulting ciphertext, which includes the authentication tag.
