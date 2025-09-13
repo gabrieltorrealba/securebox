@@ -2,7 +2,6 @@ package nonce
 
 import "crypto/rand"
 
-
 // randomSource is a NonceSource that generates nonces using crypto/rand.
 type randomSource struct{}
 

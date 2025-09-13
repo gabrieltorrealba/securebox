@@ -11,7 +11,8 @@ type xchacha struct{}
 func NewXChaCha20Poly1305() AEAD { return &xchacha{} }
 
 // KeySize returns the key size in bytes for XChaCha20-Poly1305.
-func (x *xchacha) KeySize() int   { return chacha20poly1305.KeySize }
+func (x *xchacha) KeySize() int { return chacha20poly1305.KeySize }
+
 // NonceSize returns the nonce size in bytes for XChaCha20-Poly1305.
 func (x *xchacha) NonceSize() int { return chacha20poly1305.NonceSizeX }
 

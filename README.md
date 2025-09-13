@@ -30,6 +30,8 @@ go get github.com/gabrieltorrealba/securebox
 
 ## Usage Example
 
+### Using AES-GCM with a counter nonce (auditable) recommended
+
 ```go
 package main
 
@@ -52,9 +54,9 @@ func main() {
 
 	password := "SuperSecurePassword2025!"
 	aad := []byte("table=users;field=email;tenant=acme")
-	pii := []byte("DNI=12345678;Email=jhondoe@example.com")
+	data := []byte("DNI=12345678;Email=jhondoe@example.com")
 
-	enc, err := box.Encrypt(password, pii, aad)
+	enc, err := box.Encrypt(password, data, aad)
 	if err != nil {
 		log.Fatal("Encrypt:", err)
 	}
@@ -69,6 +71,42 @@ func main() {
 	// Persist ns.Current() in your transactional storage
 	current := ns.Current()
 	fmt.Printf("Nonce Counter: %d\n", current)
+}
+```
+### Using XChaCha20-Poly1305 instead of AES-GCM
+
+```go
+package main
+
+import (
+	"fmt"
+	"log"
+	"github.com/gabrieltorrealba/securebox"
+	"github.com/gabrieltorrealba/securebox/aead"
+	"github.com/gabrieltorrealba/securebox/nonce"
+)
+
+func main() {
+	// Create a Box using XChaCha20-Poly1305
+	box := securebox.New(
+	   securebox.WithAEAD(aead.NewXChaCha20Poly1305()),
+	)
+
+	password := "SuperSecurePassword2025!"
+	aad := []byte("table=users;field=email;tenant=acme")
+	data := []byte("DNI=12345678;Email=jhondoe@example.com")
+
+	enc, err := box.Encrypt(password, data, aad)
+	if err != nil {
+		log.Fatal("Encrypt:", err)
+	}
+	fmt.Println("BLOB:", enc)
+
+	dec, err := box.Decrypt(password, enc, aad)
+	if err != nil {
+		log.Fatal("Decrypt:", err)
+	}
+	fmt.Println("Plain:", string(dec))
 }
 ```
 
